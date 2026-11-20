@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String?
+  password     String?
+  role         UserRole      @default(USER)
+  provider     AuthProvider  @default(LOCAL)
+  providerId   String?       @unique
+  baseCurrency String        @default("BRL")
+  avatarUrl    String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+  categories   Category[]
+  merchants    Merchant[]
+}
+
+model Category {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  description  String?
+  icon         String?
+  isDefault    Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  transactions Transaction[]
+  merchants    Merchant[]
+}
+
+model Merchant {
+  id           String        @id @default(cuid())
+  name         String
+  customName   String?
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  categoryId   String
+  category     Category      @relation(fields: [categoryId], references: [id])
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@unique([userId, name])
+}
+
+model Transaction {
+  id              String          @id @default(cuid())
+  amount          Float
+  cardNumber      String?
+  currencyCode    String          @default("BRL")
+  dateTime        DateTime
+  institution     String
+  merchantId      String
+  merchant        Merchant        @relation(fields: [merchantId], references: [id])
+  entryType       EntryType       @default(out)
+  transactionType TransactionType @default(CREDIT)
+  installment     String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  userId          String
+  user            User            @relation(fields: [userId], references: [id])
+  categoryId      String
+  category        Category        @relation(fields: [categoryId], references: [id])
+
+  @@unique([userId, merchantId, amount, dateTime, cardNumber, currencyCode, installment])
+  @@index([userId])
+  @@index([categoryId])
+  @@index([merchantId])
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum TransactionType {
+  DEBIT
+  CREDIT
+  PIX
+}
+
+enum EntryType {
+  in
+  out
+}
+
+enum AuthProvider {
+  LOCAL
+  GOOGLE
+}

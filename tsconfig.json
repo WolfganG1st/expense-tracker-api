@@ -1,0 +1,40 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"moduleDetection": "force",
+		"baseUrl": "./",
+		"paths": {
+			"@/*": ["src/*"],
+			"@/env.js": ["src/env.ts"],
+			"@api/server.js": ["src/api/server.ts"],
+			"@api/*": ["src/api/*"],
+			"@controllers/*": ["src/api/controllers/*"],
+			"@data/*": ["src/api/data/*"],
+			"@helpers/*": ["src/api/helpers/*"],
+			"@middleware/*": ["src/api/middleware/*"],
+			"@plugins/*": ["src/api/plugins/*"],
+			"@routes/*": ["src/api/routes/*"],
+			"@schemas/*": ["src/api/schemas/*"],
+			"@services/*": ["src/api/services/*"],
+			"@transformers/*": ["src/api/transformers/*"],
+			"@types/*": ["src/api/types/*"],
+			"@utils/*": ["src/api/utils/*"],
+			"@config/*": ["src/config/*"]
+		},
+		"isolatedModules": false,
+		"allowSyntheticDefaultImports": true,
+		"outDir": "./dist",
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"strictNullChecks": true,
+		"skipLibCheck": true,
+		"resolveJsonModule": true,
+		"sourceMap": true,
+		"declaration": true
+	},
+	"include": ["src/**/*", "prisma/seed.ts"],
+	"exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]
+}

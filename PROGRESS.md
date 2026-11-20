@@ -1,0 +1,4 @@
+- dev server
+- docker setup
+- secure measures
+- add bearer token support on swagger documentation

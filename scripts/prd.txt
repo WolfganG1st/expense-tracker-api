@@ -1,0 +1,168 @@
+# Credit Expenses Application - Product Requirements Document
+
+## Overview
+The Credit Expenses Application is a web-based tool designed to help users track, categorize, and manage their credit card expenses through Google Sheets integration. The application provides a simple interface for users to input expenses, view transaction history, and generate reports to understand spending patterns.
+
+## Business Objectives
+1. Simplify expense tracking for credit card users
+2. Provide automated integration with Google Sheets for data persistence
+3. Enable users to categorize and analyze their spending patterns
+4. Reduce the time spent on manual expense management
+
+## Target Users
+- Individual credit card users who want to track personal expenses
+- Small business owners managing company credit cards
+- Finance-conscious users who want better visibility of their spending patterns
+
+## Key Features
+
+### Core Features
+1. **Google Sheets Integration**
+   - Connect securely to user's Google Sheets
+   - Read and write expense data to specified spreadsheets
+   - Support for standard spreadsheet operations (read, write, update)
+
+2. **Expense Management**
+   - Add new expenses with details (date, amount, category, description)
+   - View all recorded expenses with sorting and filtering
+   - Update or delete existing expense entries
+   - Import expenses from CSV or other standard formats
+
+3. **Categorization System**
+   - Pre-defined expense categories (food, transportation, entertainment, etc.)
+   - Custom user-defined categories
+   - Automatic categorization suggestions based on previous entries
+
+4. **Reporting and Analytics**
+   - Monthly spending summaries
+   - Category-based expense breakdown
+   - Trend analysis (spending over time)
+   - Visual charts and graphs to represent spending patterns
+
+5. **User Authentication**
+   - Secure login system
+   - User profile management
+   - Connection to Google account for Sheets access
+
+### Additional Features (Future Phases)
+1. **Budget Management**
+   - Set monthly budgets per category
+   - Receive notifications when approaching budget limits
+   - Visual indicators of budget status
+
+2. **Receipt Management**
+   - Upload and store digital receipts
+   - OCR functionality to extract data from receipts automatically
+   - Link receipts to specific expense entries
+
+3. **Multi-user Access**
+   - Share expense sheets with family members or team
+   - Role-based permissions (view-only, edit, admin)
+   - Collaborative expense tracking
+
+## Technical Requirements
+
+### Backend
+1. **Server**
+   - Node.js application with Fastify framework
+   - RESTful API endpoints for all core functions
+   - Swagger documentation for API
+
+2. **Authentication**
+   - JWT-based authentication system
+   - Google OAuth integration for Sheets access
+   - Secure credential storage and management
+
+3. **Google Sheets Integration**
+   - Google Sheets API for read/write operations
+   - Service account authentication
+   - Error handling for API limitations and failures
+
+4. **Data Processing**
+   - Input validation and sanitization
+   - Data transformation for reporting functions
+   - Efficient querying of spreadsheet data
+
+### Frontend (Future Phase)
+1. **User Interface**
+   - Responsive web and mobile application with React expo native
+   - Modern, intuitive user experience
+
+2. **Client-side Features**
+   - Real-time validation
+   - Interactive data visualization
+   - Offline capability for basic functions
+
+### DevOps
+1. **Deployment**
+   - Docker containerization
+   - CI/CD pipeline for automated testing and deployment
+   - Environment-based configuration
+
+2. **Monitoring and Maintenance** (Future Phase)
+   - Logging system for debugging and audit trails
+   - Performance monitoring
+   - Automated backups
+
+## Non-functional Requirements
+1. **Performance**
+   - API response time under 500ms for standard operations
+   - Support for spreadsheets with up to 10,000 expense entries
+
+2. **Security**
+   - Data encryption for sensitive information
+   - Compliance with data protection regulations
+   - Regular security audits
+
+3. **Reliability**
+   - 99.9% uptime for core services
+   - Graceful handling of API rate limits and quotas
+   - Data consistency checks
+
+4. **Scalability**
+   - Support for multiple users and spreadsheets
+   - Efficient resource utilization
+
+## Success Metrics
+1. User adoption and retention rates
+2. Average time saved compared to manual expense tracking
+3. User satisfaction ratings
+4. Number of expenses processed monthly
+
+## Timeline and Phases
+
+### Phase 1: Core Functionality (Current)
+- Basic Google Sheets integration
+- Expense CRUD operations
+- Initial API endpoints and server setup
+- Service account authentication
+
+### Phase 2: Enhanced Features
+- Integrate with LLM to parse messages until we have enough context to create a better parser with more context
+- LLM will infer the category of every new merchant added
+- Add fields into the spreadsheet - Original message, Is correctly parsed
+- Integrate with a database to store the parsed data - MongoDB, PostgreSQL or Supabase
+- Improved categorization
+
+### Phase 3: Frontend and Additional Features
+- Web-based user interface
+- Budget management
+- Receipt handling
+- Data visualization
+- Reporting and analytics
+- Full API documentation
+
+### Phase 3.1: Android App
+- Android app will replace the current Buzzkill and Tasker apps
+
+### Phase 4: Multi-user Access
+- Multi-user access
+- Role-based permissions
+- User authentication
+
+## Constraints and Assumptions
+- Users have Google accounts and basic familiarity with Google Sheets
+- Initial version focuses on backend functionality with API endpoints
+- Future versions will include a web/mobile frontend
+- Service relies on Google Sheets API availability and quotas
+- Only available on Android

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Cross-platform script for WSL and Windows environments
+echo "Running pre-commit checks..."
+
+# Find the project root directory (where package.json is located)
+ROOT_DIR=$(git rev-parse --show-toplevel)
+
+# Change to the project root directory
+cd "$ROOT_DIR" || exit 1
+
+# Try to run the formatter but don't fail if it has compatibility issues
+echo "Attempting to run formatter (will continue if it fails)..."
+pnpm format || {
+  echo "Warning: Formatter failed to run, but continuing with commit."
+  echo "Consider running formatter manually later using pnpm format."
+}
+
+# Stage any changes made by the formatter
+git update-index --again
+
+# Exit with success - we don't want to block commits due to formatter issues
+exit 0

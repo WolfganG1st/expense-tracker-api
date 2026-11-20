@@ -1,0 +1,707 @@
+{
+	"info": {
+		"_postman_id": "2aaf9e0a-d0aa-4bb7-9948-27de809e88f8",
+		"name": "Credit Expenses API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43690944"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{USER_EMAIL}}\",\n  \"name\": \"{{USER_NAME}}\",\n  \"password\": \"{{USER_PASSWORD}}\",\n  \"confirmPassword\": \"{{USER_PASSWORD}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/register",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "register"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": ["pm.environment.set(\"token\", pm.response.json().accessToken);"],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{USER_EMAIL}}\",\n  \"password\": \"{{USER_PASSWORD}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/login",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/refresh",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "refresh"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/check-email?email=user@example.com",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "check-email"],
+							"query": [
+								{
+									"key": "email",
+									"value": "user@example.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Google Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"token\": \"{{GOOGLE_TOKEN}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/google",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "google"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Google Callback",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/google/callback?code=&state=",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "google", "callback"],
+							"query": [
+								{
+									"key": "code",
+									"value": ""
+								},
+								{
+									"key": "state",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/profile/me",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "profile", "me"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/profile/me",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "profile", "me"]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"\",\n  \"baseCurrency\": \"\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Avatar",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/profile/avatar",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "profile", "avatar"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/users",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "users"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/users/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "users", ":id"],
+							"variable": [
+								{
+									"key": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Get Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/transactions/?period=month&page=1&limit=20",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "transactions", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "month",
+									"description": "week | month | quarter | annual | all"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Expenses",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/transactions/?period=all&page=1&limit=20",
+									"host": ["{{BASE_URL}}"],
+									"path": ["api", "transactions", ""],
+									"query": [
+										{
+											"key": "period",
+											"value": "all",
+											"description": "week | month | quarter | annual | all"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';style-src 'self' 'unsafe-inline';script-src 'self';img-src 'self' data:;connect-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';object-src 'none';script-src-attr 'none';upgrade-insecure-requests"
+								},
+								{
+									"key": "Cross-Origin-Opener-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Cross-Origin-Resource-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Origin-Agent-Cluster",
+									"value": "?1"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000; includeSubDomains"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "access-control-expose-headers",
+									"value": "X-Rate-Limit"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "468"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 16 Jun 2025 10:49:10 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"expenses\": [\n            {\n                \"id\": \"ex_txn_0001\",\n                \"userId\": \"ex_user_0001\",\n                \"amount\": 42.50,\n                \"cardNumber\": \"0000\",\n                \"currencyCode\": \"BRL\",\n                \"dateTime\": \"2024-01-15T12:00:00.000Z\",\n                \"institution\": \"Example Bank\",\n                \"place\": \"EXAMPLE GROCERY\",\n                \"transactionType\": \"CREDIT\",\n                \"category\": {\n                    \"id\": \"ex_cat_0001\",\n                    \"name\": \"Food\",\n                    \"description\": \"Spending on food, restaurants, etc.\",\n                    \"isDefault\": true,\n                    \"createdAt\": \"2024-01-01T00:00:00.000Z\"\n                }\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Transaction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Compra no crédito aprovada\",\n  \"message\": \"Sua compra no cartão final 0000 no valor de R$ 42,50, dia 15/01/2024 às 12:00, em EXAMPLE GROCERY, foi aprovada.\",\n  \"app\": \"Example Bank\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/transactions/",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "transactions", ""]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transaction Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/transactions/summary",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "transactions", "summary"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Merchants",
+			"item": [
+				{
+					"name": "Get Merchants",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/merchants",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "merchants"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Merchant",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/merchants/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "merchants", ":id"],
+							"variable": [
+								{
+									"key": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Merchant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/merchants",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "merchants"]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"\",\n  \"categoryId\": \"\",\n  \"customName\": null\n}"
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Get Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/categories",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "categories"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/categories/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "categories", ":id"],
+							"variable": [
+								{
+									"key": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"\",\n  \"description\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/categories",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "categories"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"\",\n  \"description\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/categories/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "categories", ":id"],
+							"variable": [
+								{
+									"key": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/categories/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "categories", ":id"],
+							"variable": [
+								{
+									"key": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reports",
+			"item": [
+				{
+					"name": "Period Spending",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/reports/period-spending?period=month",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "reports", "period-spending"],
+							"query": [
+								{
+									"key": "period",
+									"value": "month",
+									"description": "week | month | quarter | annual"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Period Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/reports/summary?period=month&categoryId=&placeId",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "reports", "summary"],
+							"query": [
+								{
+									"key": "period",
+									"value": "month",
+									"description": "week | month | quarter | annual | all"
+								},
+								{
+									"key": "categoryId",
+									"value": ""
+								},
+								{
+									"key": "placeId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Category Breakdown",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/reports/category-breakdown?period=all",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "reports", "category-breakdown"],
+							"query": [
+								{
+									"key": "period",
+									"value": "all"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/health",
+					"host": ["{{BASE_URL}}"],
+					"path": ["health"]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:3100"
+		},
+		{
+			"key": "USER_EMAIL",
+			"value": ""
+		},
+		{
+			"key": "USER_NAME",
+			"value": ""
+		},
+		{
+			"key": "USER_PASSWORD",
+			"value": ""
+		},
+		{
+			"key": "START_DATE",
+			"value": ""
+		},
+		{
+			"key": "END_DATE",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "GOOGLE_TOKEN",
+			"value": ""
+		}
+	]
+}

@@ -1,0 +1,17 @@
+{
+	"$schema": "https://unpkg.com/knip@latest/schema.json",
+	"entry": ["src/index.ts"],
+	"project": ["src/**/*.ts", "scripts/**/*.sh"],
+	"jest": {
+		"config": ["jest.config.js", "jest.security.config.js"]
+	},
+	"ignore": ["**/user-storage.service.ts"],
+	"ignoreDependencies": ["jest-html-reporter", "pino-pretty"],
+	"ignoreExportsUsedInFile": {
+		"interface": true,
+		"type": true
+	},
+	"paths": {
+		"@/*": ["src/*"]
+	}
+}

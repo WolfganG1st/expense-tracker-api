@@ -1,0 +1,405 @@
+{
+	"tasks": [
+		{
+			"id": 1,
+			"title": "Setup Node.js Project with Fastify",
+			"description": "Initialize the Node.js project with Fastify framework and configure the basic server structure",
+			"status": "done",
+			"dependencies": [],
+			"priority": "high",
+			"details": "Create a new Node.js project with npm init. Install Fastify as the main framework. Set up the project structure with folders for routes, controllers, services, and utilities. Configure environment variables using dotenv. Set up basic error handling middleware. Implement health check endpoint. Add Docker configuration for containerization with a Dockerfile and docker-compose.yml.",
+			"testStrategy": "Create basic integration tests to verify server startup and health check endpoint. Implement unit tests for error handling middleware. Verify Docker container builds and runs correctly."
+		},
+		{
+			"id": 2,
+			"title": "Implement Google OAuth and JWT Authentication",
+			"description": "Set up the authentication system using JWT and Google OAuth for secure access to the application and Google Sheets",
+			"status": "done",
+			"dependencies": [1],
+			"priority": "high",
+			"details": "Implement Google OAuth 2.0 flow for authentication. Create JWT token generation and validation utilities. Set up secure storage for user credentials. Implement authentication middleware for protected routes. Create service account authentication for Google Sheets API access. Store and manage tokens securely. Implement refresh token mechanism.",
+			"testStrategy": "Unit test JWT generation and validation. Mock Google OAuth endpoints for testing authentication flow. Test authentication middleware with valid and invalid tokens. Verify secure credential storage with appropriate encryption."
+		},
+		{
+			"id": 3,
+			"title": "Implement Google Sheets API Integration",
+			"description": "Develop the core integration with Google Sheets API for reading and writing transaction data",
+			"status": "done",
+			"dependencies": [2],
+			"priority": "high",
+			"details": "Set up Google Sheets API client using Google API Node.js client library. Implement functions for basic spreadsheet operations (read, write, update). Create utility functions for cell formatting and data validation. Implement error handling for API limitations and failures. Create connection management for service account authentication. Implement retry logic for failed API calls. Add logging for API interactions.",
+			"testStrategy": "Create mock Google Sheets API responses for testing. Implement integration tests with a test spreadsheet. Test error handling with simulated API failures. Verify read/write operations maintain data integrity."
+		},
+		{
+			"id": 4,
+			"title": "Develop Transaction Management API Endpoints",
+			"description": "Create RESTful API endpoints for adding, viewing, updating, and deleting transaction entries",
+			"status": "done",
+			"dependencies": [3],
+			"priority": "high",
+			"details": "Implement CRUD endpoints for transaction management. Create input validation schemas using Fastify's validation capabilities. Develop controllers and service layers for transaction operations. Implement sorting and filtering functionality for transaction retrieval. Add pagination support for large datasets. Create CSV import functionality. Implement data sanitization for all inputs.",
+			"testStrategy": "Create unit tests for validation schemas. Implement integration tests for each CRUD endpoint. Test sorting, filtering, and pagination with various parameters. Verify CSV import with sample files. Test error scenarios and edge cases."
+		},
+		{
+			"id": 5,
+			"title": "Implement Categorization System",
+			"description": "Develop the transaction categorization system with pre-defined and custom categories",
+			"status": "done",
+			"dependencies": [4, "6"],
+			"priority": "medium",
+			"details": "Create a data structure for pre-defined transaction categories. Implement API endpoints for managing custom user-defined categories. Develop logic for automatic categorization suggestions based on previous entries. Create category management service. Implement category-based filtering for transactions. Set up database schema for categories if using an external database.",
+			"testStrategy": "Test category creation, retrieval, update, and deletion. Verify automatic categorization suggestions with sample data. Test category-based filtering of transactions. Validate handling of custom categories.",
+			"subtasks": [
+				{
+					"id": 1,
+					"title": "Design and Implement Category Data Model",
+					"description": "Create the foundational data structure for categories, including pre-defined categories, subcategories, and support for custom user categories.",
+					"dependencies": [],
+					"details": "1. Design a hierarchical category model with fields for name, description, parent category (for subcategories), and a flag to identify custom categories.\n2. Implement standard pre-defined categories based on common transaction types (e.g., Office Supplies, Travel, Utilities, Marketing).\n3. Add support for subcategories (e.g., under Travel: Airfare, Lodging, Meals).\n4. Ensure the model supports both system-defined and user-defined categories.\n5. Add validation to prevent duplicates and enforce naming conventions.\n6. Set up database schema with appropriate indexes for performance.\n7. Testing approach: Write unit tests to verify category creation, parent-child relationships, and validation rules.",
+					"status": "done",
+					"parentTaskId": 5
+				},
+				{
+					"id": 2,
+					"title": "Develop Category Management Service",
+					"description": "Create a service layer to handle all category-related operations, including CRUD operations for both pre-defined and custom categories.",
+					"dependencies": [1],
+					"details": "1. Implement a CategoryService class that encapsulates all category-related business logic.\n2. Add methods for creating, retrieving, updating, and deleting categories.\n3. Implement safeguards to prevent deletion of categories in use by transactions.\n4. Add methods for retrieving categories in hierarchical format for UI display.\n5. Implement functions to merge or migrate transactions when categories are renamed or consolidated.\n6. Create methods to filter categories by type (custom vs. pre-defined).\n7. Add audit logging for category modifications to maintain compliance.\n8. Testing approach: Create integration tests that verify the service correctly handles category operations and enforces business rules.",
+					"status": "done",
+					"parentTaskId": 5
+				},
+				{
+					"id": 3,
+					"title": "Implement API Endpoints for Category Management",
+					"description": "Create RESTful API endpoints to allow frontend clients to manage and interact with the categorization system.",
+					"dependencies": [2],
+					"details": "1. Design and implement RESTful endpoints for category CRUD operations.\n2. Create endpoints for retrieving the full category hierarchy.\n3. Implement endpoints for managing custom user categories with appropriate authorization.\n4. Add validation middleware to ensure data integrity.\n5. Implement pagination for category listing endpoints.\n6. Create documentation for the API using Swagger/OpenAPI.\n7. Add rate limiting and security measures to protect endpoints.\n8. Testing approach: Develop API tests that verify endpoint functionality, authorization rules, and error handling.",
+					"status": "done",
+					"parentTaskId": 5
+				},
+				{
+					"id": 4,
+					"title": "Develop Automatic Categorization Engine",
+					"description": "Create an intelligent system that suggests or automatically assigns categories to transactions based on previous entries and patterns.",
+					"dependencies": [1, 2],
+					"details": "1. Implement a rule-based engine for basic categorization based on merchant names and transaction descriptions.\n2. Create a machine learning model that learns from user categorization patterns (optional for advanced implementation).\n3. Develop an algorithm to analyze historical transaction data to identify patterns.\n4. Implement confidence scoring for category suggestions.\n5. Create an API endpoint to get category suggestions for new transactions.\n6. Build a feedback mechanism to improve suggestions based on user corrections.\n7. Implement caching for frequently accessed categorization rules.\n8. Testing approach: Create test cases with sample transaction data to verify categorization accuracy and performance.",
+					"status": "done",
+					"parentTaskId": 5
+				},
+				{
+					"id": 5,
+					"title": "Implement Category-Based Filtering and Reporting",
+					"description": "Develop functionality to filter and report on transactions based on categories, enabling users to gain insights into spending patterns.",
+					"dependencies": [1, 2, 3],
+					"details": "1. Create query methods to filter transactions by category, including parent and subcategories.\n2. Implement API endpoints for category-based transaction filtering.\n3. Develop aggregation functions to summarize transactions by category for reporting.\n4. Add support for time-based category reporting (e.g., monthly transactions by category).\n5. Implement data export functionality for category-based reports (CSV, PDF).\n6. Create caching mechanisms for frequently accessed reports to improve performance.\n7. Add visualization support for category distribution (optional for frontend integration).\n8. Testing approach: Develop integration tests with sample transaction data to verify filtering accuracy and report generation.",
+					"status": "done",
+					"parentTaskId": 5
+				}
+			]
+		},
+		{
+			"id": 6,
+			"title": "Develop LLM Integration for Transaction Parsing",
+			"description": "Integrate with a Language Learning Model (LLM) to parse messages and infer transaction categories",
+			"status": "done",
+			"dependencies": ["15"],
+			"priority": "medium",
+			"details": "Set up integration with an LLM API (like OpenAI). Create a message parsing service to extract transaction details from text. Implement category inference based on description and vendor. Add context management to improve parsing accuracy over time. Create a feedback mechanism to mark correctly parsed entries. Implement error handling for LLM API failures. Add logging for parsing attempts and results.",
+			"testStrategy": "Test parsing with various message formats. Verify category inference with different transaction types. Create a test suite with sample messages. Measure parsing accuracy. Test the feedback mechanism for correctly parsed entries.",
+			"subtasks": [
+				{
+					"id": 1,
+					"title": "Set up LLM API Integration and Configuration Management",
+					"description": "Establish a connection with an LLM provider (OpenAI recommended) and create a configuration system to manage API keys, model selection, and request parameters.",
+					"dependencies": [],
+					"details": "Implementation steps:\n1. Create an LLMService class that handles API connections with proper error handling and retries\n2. Implement configuration management for API keys using environment variables\n3. Set up model selection logic (use smaller models like GPT-3.5-turbo for simple parsing, GPT-4 for complex cases)\n4. Configure request parameters (temperature=0 for deterministic outputs, max_tokens limits)\n5. Implement basic error handling for API failures (retry logic, fallbacks)\n6. Add comprehensive logging for API calls and responses\n7. Testing approach: Create unit tests with mocked API responses and integration tests with actual API calls using test credentials",
+					"status": "done",
+					"parentTaskId": 6
+				},
+				{
+					"id": 2,
+					"title": "Develop Message Parsing Service with Prompt Engineering",
+					"description": "Create a service that extracts transaction details from text messages using carefully engineered prompts that request structured outputs.",
+					"dependencies": [1],
+					"details": "Implementation steps:\n1. Design an TransactionParsingService class that uses the LLMService\n2. Create optimized prompts that explicitly request JSON-formatted responses containing transaction amount, date, vendor, and description\n3. Implement prompt templates with placeholders for dynamic content\n4. Use Pydantic models to validate and parse LLM responses (TransactionDetails class)\n5. Add fallback mechanisms for handling malformed LLM outputs\n6. Implement a semantic caching layer using sentence embeddings to reduce duplicate API calls for similar messages\n7. Testing approach: Test with a variety of message formats (receipts, informal descriptions, incomplete information) and verify correct extraction of transaction details",
+					"status": "done",
+					"parentTaskId": 6
+				},
+				{
+					"id": 3,
+					"title": "Implement Category Inference Engine",
+					"description": "Create a system that uses the LLM to infer transaction categories based on the extracted transaction details, with support for custom categories.",
+					"dependencies": [2],
+					"details": "Implementation steps:\n1. Define a standard set of transaction categories with descriptions\n2. Create a CategoryInferenceService that uses the LLM to classify transactions\n3. Design prompts that include category definitions and examples for better inference\n4. Implement a confidence score system to identify uncertain classifications\n5. Create a mechanism to handle custom organization-specific categories\n6. Use Retrieval-Augmented Generation (RAG) to incorporate previous similar transactions as context\n7. Add exact-match caching for category inference to improve performance\n8. Testing approach: Create a test suite with diverse transaction scenarios covering all categories, including edge cases",
+					"status": "done",
+					"parentTaskId": 6
+				},
+				{
+					"id": 4,
+					"title": "Develop Context Management System",
+					"description": "Create a system that maintains and provides relevant context to the LLM to improve parsing accuracy over time, using historical data and user preferences.",
+					"dependencies": [2, 3],
+					"details": "Implementation steps:\n1. Design a ContextManager class that stores and retrieves relevant context\n2. Implement vector embeddings for semantic similarity search of previous transactions\n3. Create a mechanism to include user-specific patterns and preferences in the context\n4. Develop a context selection algorithm that chooses the most relevant context within token limits\n5. Implement a database schema for storing historical parsing results and feedback\n6. Create an API to query and update the context database\n7. Testing approach: Measure improvement in parsing accuracy when context is provided versus when it's not available",
+					"status": "done",
+					"parentTaskId": 6
+				},
+				{
+					"id": 5,
+					"title": "Implement User Feedback and Continuous Improvement System",
+					"description": "Create a mechanism for users to provide feedback on parsing results and use this feedback to improve the system over time.",
+					"dependencies": [2, 3, 4],
+					"details": "Implementation steps:\n1. Create a FeedbackService to collect and store user corrections\n2. Implement an API endpoint for submitting feedback on parsed transactions\n3. Design a UI component for marking correctly parsed entries and suggesting corrections\n4. Develop a system to incorporate feedback into future parsing attempts (adjust prompts, add examples)\n5. Create an analytics dashboard to track parsing accuracy over time\n6. Implement a periodic evaluation system to identify common parsing errors\n7. Add A/B testing capability to compare different prompt strategies\n8. Testing approach: Simulate user feedback scenarios and verify that the system improves accuracy for similar future inputs",
+					"status": "done",
+					"parentTaskId": 6
+				}
+			]
+		},
+		{
+			"id": 7,
+			"title": "Implement Database Integration",
+			"description": "Set up and integrate a database for storing parsed transaction data",
+			"status": "done",
+			"dependencies": [4, 6],
+			"priority": "medium",
+			"details": "Select and configure a database (MongoDB, PostgreSQL, or Supabase as mentioned in PRD). Design and implement database schema for transactions, categories, and parsing results. Create data access layer for database operations. Implement data synchronization between Google Sheets and the database. Add migration scripts for schema updates. Implement connection pooling and error handling for database operations.",
+			"testStrategy": "Test database CRUD operations with sample data. Verify data synchronization between Google Sheets and database. Test migration scripts. Implement performance testing for database operations with large datasets. Test error handling and recovery."
+		},
+		{
+			"id": 8,
+			"title": "Develop Reporting and Analytics API",
+			"description": "Create API endpoints for generating spending reports and analytics",
+			"status": "done",
+			"dependencies": [4, 5, 7],
+			"priority": "medium",
+			"details": "Implement endpoints for period spending summaries. Create category-based transaction breakdown calculations. Develop trend analysis for spending over time. Implement data aggregation services for reporting. Create data transformation utilities for report generation. Add caching for frequently requested reports. Implement date range filtering for reports.",
+			"testStrategy": "Test report generation with sample transaction data. Verify calculations for spending summaries and breakdowns. Test trend analysis with time-series data. Validate report caching mechanisms. Test performance with large datasets.",
+			"subtasks": [
+				{
+					"id": 1,
+					"title": "Design and implement core report data models and DTOs",
+					"description": "Create the foundational data models and Data Transfer Objects (DTOs) that will be used throughout the reporting API. This includes defining database models, ORM mappings, and response schemas for various report types.",
+					"dependencies": [],
+					"details": "1. Define database models for spending reports, categories, and analytics data\n2. Create DTOs that decouple API response formats from internal data models\n3. Implement validation rules for report parameters\n4. Design flexible schemas that support all required report types (monthly summaries, category breakdowns, trend analysis)\n5. Set up proper indexes on database tables for fields commonly used in filtering and sorting\n6. Add documentation using OpenAPI/Swagger annotations\n7. Test with unit tests for model validation and transformation logic\n\nFollow the DTO pattern to separate concerns between database representation and API responses. Use a consistent naming convention (preferably camelCase for API responses) throughout the system.",
+					"status": "done",
+					"parentTaskId": 8
+				},
+				{
+					"id": 2,
+					"title": "Implement data aggregation and transformation services",
+					"description": "Create service layer components that handle the complex data aggregation, calculation, and transformation logic required for generating reports. These services will sit between the API controllers and data access layer.",
+					"dependencies": [1],
+					"details": "1. Develop a SpendingAggregationService to calculate spending summaries\n2. Implement CategoryBreakdownService for transaction categorization\n3. Create TrendAnalysisService for time-series calculations\n4. Build DataTransformationService with utilities for formatting report data\n5. Implement caching strategies for expensive calculations using Redis or similar\n6. Add proper error handling and logging throughout the services\n7. Write comprehensive unit tests covering edge cases and various data scenarios\n\nUse the Facade pattern to hide complex aggregation logic behind simple service interfaces. Implement efficient SQL queries or ORM operations that leverage database capabilities for aggregation rather than loading all data into memory. Consider using batch processing for large datasets.",
+					"status": "done",
+					"parentTaskId": 8
+				},
+				{
+					"id": 3,
+					"title": "Develop period spending and category breakdown API endpoints",
+					"description": "Create the first set of API endpoints that provide period spending summaries and category-based transaction breakdowns, following RESTful conventions and incorporating filtering, pagination, and sorting capabilities.",
+					"dependencies": [1, 2],
+					"details": "1. Implement GET /v1/reports/period-spending endpoint with query parameter for period selection\n2. Create GET /v1/reports/category-breakdown endpoint with appropriate filters\n3. Add pagination support using limit and offset parameters\n4. Implement sorting capabilities via sort parameter (e.g., sort=amount:desc)\n5. Add proper request validation and error handling\n6. Implement rate limiting to prevent API abuse\n7. Document endpoints using OpenAPI/Swagger\n8. Write integration tests that verify endpoint behavior with test data\n\nFollow resource-oriented API design principles with clear naming conventions. Ensure consistent response formats across endpoints. Use query parameters for filtering and sorting rather than creating separate endpoints for each variation. Return appropriate HTTP status codes for different error conditions.",
+					"status": "done",
+					"parentTaskId": 8
+				},
+				{
+					"id": 4,
+					"title": "Implement trend analysis and time-series reporting endpoints",
+					"description": "Develop API endpoints that provide trend analysis and time-series data for spending over time, enabling clients to visualize spending patterns and changes.",
+					"dependencies": [1, 2],
+					"details": "1. Create GET /v1/analytics/spending-trends endpoint with flexible time period parameters\n2. Implement GET /v1/analytics/spending-comparison for period-over-period comparisons\n3. Add support for different aggregation levels (daily, weekly, monthly, quarterly, yearly)\n4. Implement filtering by categories, tags, or other attributes\n5. Optimize database queries for time-series data retrieval\n6. Add caching for frequently requested time periods\n7. Document endpoints with example requests and responses\n8. Test with different time ranges and aggregation levels\n\nUse efficient time-series query patterns appropriate for your database. Consider implementing materialized views or pre-calculated aggregates for common time periods to improve performance. Ensure consistent handling of time zones and date formats across the API.",
+					"status": "done",
+					"parentTaskId": 8
+				},
+				{
+					"id": 5,
+					"title": "Implement caching system and performance optimizations",
+					"description": "Add a comprehensive caching system for report results and implement performance optimizations to ensure the API remains responsive even with large datasets or complex queries.",
+					"dependencies": [2, 3, 4],
+					"details": "1. Implement a cache service using Redis or a similar in-memory data store\n2. Add cache headers to API responses (ETag, Cache-Control)\n3. Create cache invalidation strategies when underlying data changes\n4. Implement background processing for complex reports using a task queue\n5. Add monitoring and instrumentation to identify performance bottlenecks\n6. Optimize database queries with proper indexing and query planning\n7. Implement conditional request processing using If-None-Match headers\n8. Test cache hit rates and performance under load\n\nUse a multi-level caching strategy with both application-level caching for expensive calculations and HTTP-level caching for API responses. Consider implementing a report generation queue for complex reports that may take longer to generate. Add appropriate cache keys based on query parameters to maximize cache hit rates while ensuring data correctness.",
+					"status": "done",
+					"parentTaskId": 8
+				}
+			]
+		},
+		{
+			"id": 9,
+			"title": "Implement API Documentation with Swagger",
+			"description": "Create comprehensive API documentation using Swagger",
+			"status": "done",
+			"dependencies": [4, 5, 8],
+			"priority": "low",
+			"details": "Integrate Swagger with Fastify using fastify-swagger. Document all API endpoints with descriptions, parameters, request bodies, and responses. Add authentication requirements to endpoint documentation. Include example requests and responses. Create API versioning documentation. Add schema definitions for all data models. Implement interactive API testing through Swagger UI.",
+			"testStrategy": "Verify all endpoints are properly documented. Test example requests in Swagger UI. Validate schema definitions against actual data models. Ensure authentication requirements are accurately documented."
+		},
+		{
+			"id": 10,
+			"title": "Set up CI/CD Pipeline and Deployment Configuration",
+			"description": "Configure the continuous integration and deployment pipeline for automated testing and deployment",
+			"status": "deferred",
+			"dependencies": [1, 9],
+			"priority": "low",
+			"details": "Set up a CI/CD pipeline using GitHub Actions or similar tool. Configure automated testing for all components. Implement environment-based configuration management. Set up Docker image building and publishing. Configure deployment to target environments. Implement smoke tests after deployment. Add logging and monitoring configuration. Set up environment variables management for different environments.",
+			"testStrategy": "Test the CI/CD pipeline with sample commits. Verify automated testing catches issues. Test deployment to different environments. Validate environment-specific configuration loading. Verify Docker image building and deployment.",
+			"subtasks": [
+				{
+					"id": 1,
+					"title": "Configure GitHub Actions CI Pipeline with Testing Integration",
+					"description": "Set up the initial CI pipeline using GitHub Actions with automated testing for all components, following the 'Pipeline as Code' pattern.",
+					"dependencies": [],
+					"details": "1. Create a `.github/workflows/ci.yml` file that triggers on push and pull requests to main branch.\n2. Configure the workflow to set up the appropriate runtime environment (Node.js, Python, etc.).\n3. Implement steps for dependency installation, linting, and running unit tests.\n4. Add code coverage reporting and artifact generation.\n5. Set up caching for dependencies to optimize pipeline speed.\n6. Configure the pipeline to fail on test failures and linting errors.\n7. Test the pipeline by making a small commit and verifying all steps run correctly.\n8. For testing, follow the approach of running unit tests first, then integration tests, to get faster feedback on failures.",
+					"status": "pending",
+					"parentTaskId": 10
+				},
+				{
+					"id": 2,
+					"title": "Implement Docker Build and Registry Integration",
+					"description": "Configure Docker image building, tagging, and publishing to a container registry as part of the CI/CD pipeline.",
+					"dependencies": [1],
+					"details": "1. Create a Dockerfile optimized for the application with proper layering to improve build speed.\n2. Extend the GitHub Actions workflow to build Docker images after successful tests.\n3. Configure authentication with a container registry (Docker Hub, GitHub Container Registry, AWS ECR, etc.).\n4. Implement image tagging strategy using git commit SHA and semantic versioning.\n5. Set up Docker layer caching to speed up builds.\n6. Add security scanning for Docker images using Trivy or Snyk.\n7. Test the workflow by verifying images are correctly built and pushed to the registry.\n8. Document the image naming convention and tagging strategy for the team.",
+					"status": "pending",
+					"parentTaskId": 10
+				},
+				{
+					"id": 3,
+					"title": "Set Up Environment-Based Configuration Management",
+					"description": "Implement a secure configuration management system that handles environment-specific variables and secrets.",
+					"dependencies": [1, 2],
+					"details": "1. Create environment configuration files for development, staging, and production.\n2. Set up GitHub Secrets for storing sensitive information (API keys, database credentials).\n3. Implement a mechanism to inject the right configuration based on the deployment environment.\n4. Configure environment variable management in the CI/CD pipeline.\n5. Create a validation step to ensure all required configuration is present before deployment.\n6. Implement secret rotation policies and document them.\n7. Test configuration loading in different environments to ensure isolation.\n8. Set up a local development configuration that doesn't require production secrets.",
+					"status": "pending",
+					"parentTaskId": 10
+				},
+				{
+					"id": 4,
+					"title": "Configure Deployment Pipelines for Multiple Environments",
+					"description": "Set up the CD part of the pipeline to deploy to different environments (dev, staging, production) with appropriate safeguards.",
+					"dependencies": [2, 3],
+					"details": "1. Create a `.github/workflows/cd.yml` file that triggers on successful builds of the main branch.\n2. Implement a multi-stage deployment pipeline (dev → staging → production).\n3. Configure approval gates for production deployments using GitHub environments or manual approvals.\n4. Set up infrastructure-as-code (Terraform, AWS CloudFormation, etc.) for consistent environment provisioning.\n5. Implement blue-green or canary deployment strategy for zero-downtime deployments.\n6. Configure rollback mechanisms in case of failed deployments.\n7. Add deployment notifications to team communication channels (Slack, Teams).\n8. Test the complete pipeline by deploying a small change through all environments.",
+					"status": "pending",
+					"parentTaskId": 10
+				},
+				{
+					"id": 5,
+					"title": "Implement Post-Deployment Monitoring and Validation",
+					"description": "Set up smoke tests, logging, monitoring, and alerting to validate deployments and detect issues quickly.",
+					"dependencies": [4],
+					"details": "1. Create smoke test scripts that run after deployment to verify critical functionality.\n2. Configure the pipeline to run these tests automatically after each deployment.\n3. Set up application logging with structured logs that include deployment information.\n4. Implement monitoring using Prometheus/Grafana or similar tools to track application health.\n5. Configure alerting for critical metrics and error rates.\n6. Add deployment markers in monitoring dashboards to correlate changes with performance.\n7. Set up automated rollbacks if smoke tests fail or if critical metrics degrade after deployment.\n8. Document incident response procedures for deployment failures.",
+					"status": "pending",
+					"parentTaskId": 10
+				}
+			]
+		},
+		{
+			"id": 11,
+			"title": "Improve server logs",
+			"description": "Remove unnecessary fields like level, pid, remoteAddress, remotePort. Normalize time field from unix to a human readable date. Pretify the JSON format because it is currently hard to read, it is too piled up. Create debug mode to enable or disable debug logs.",
+			"details": "",
+			"testStrategy": "",
+			"status": "done",
+			"dependencies": [],
+			"priority": "high",
+			"subtasks": [
+				{
+					"id": 1,
+					"title": "Implement Log Format Configuration and Field Filtering",
+					"description": "Create a configurable logging system that removes unnecessary fields (level, pid, remoteAddress, remotePort) from log output while maintaining essential information.",
+					"dependencies": [],
+					"details": "1. Identify the current logging implementation and determine if a library like Winston (Node.js), structlog (Python), or Logback (Java) is in use.\n2. Create a custom formatter that filters out specified fields:\n   - Create a whitelist or blacklist approach for field filtering\n   - Ensure the filtering is configurable via environment variables or config files\n   - Preserve essential fields like message content and error details\n3. Add unit tests to verify field filtering works correctly\n4. Document the new logging format and configuration options\n5. Testing approach: Create test cases with mock log entries containing all fields and verify unnecessary fields are removed while essential data is preserved.",
+					"status": "done",
+					"parentTaskId": 11
+				},
+				{
+					"id": 2,
+					"title": "Normalize Timestamp Format to Human-Readable ISO 8601",
+					"description": "Convert Unix timestamp values to ISO 8601 format (YYYY-MM-DDTHH:MM:SS.sssZ) for improved human readability while maintaining sortability and timezone information.",
+					"dependencies": [1],
+					"details": "1. Extend the custom formatter from subtask 1 to handle timestamp normalization\n2. Identify the current timestamp field (likely 'time') in the log structure\n3. Implement conversion logic from Unix timestamp to ISO 8601:\n   - For Node.js: `new Date(unixTimestamp * 1000).toISOString()`\n   - For Python: `datetime.datetime.fromtimestamp(timestamp).isoformat()`\n   - For Java: `Instant.ofEpochSecond(timestamp).toString()`\n4. Add fallback logic to use current time if timestamp is missing\n5. Ensure timezone information is preserved (preferably UTC/Z)\n6. Add unit tests to verify timestamp conversion works correctly with various inputs\n7. Testing approach: Create test cases with different Unix timestamps and verify correct ISO 8601 conversion.",
+					"status": "done",
+					"parentTaskId": 11
+				},
+				{
+					"id": 3,
+					"title": "Implement Pretty-Printing for JSON Log Format",
+					"description": "Enhance log readability by implementing pretty-printing for JSON logs with proper indentation and formatting, making them easier to read during development and debugging.",
+					"dependencies": [1, 2],
+					"details": "1. Extend the logging formatter to include pretty-printing capabilities for JSON output\n2. Implement configurable indentation (recommend 2 spaces for balance of readability and compactness)\n3. For Node.js, use `JSON.stringify(logObject, null, 2)` or Winston's built-in pretty-print formatter\n4. For Python, use `json.dumps(log_dict, indent=2)` or structlog's pretty-printing processor\n5. For Java, use Jackson's `ObjectMapper` with `SerializationFeature.INDENT_OUTPUT`\n6. Ensure the pretty-printing doesn't break existing log parsing systems\n7. Consider performance implications and potentially make pretty-printing optional in production\n8. Testing approach: Generate sample logs and verify the JSON structure is properly indented and formatted for readability.",
+					"status": "done",
+					"parentTaskId": 11
+				},
+				{
+					"id": 4,
+					"title": "Create Debug Mode Toggle for Log Levels",
+					"description": "Implement a configurable debug mode that can enable or disable debug-level logs, allowing for dynamic log verbosity control.",
+					"dependencies": [1, 2, 3],
+					"details": "1. Identify the current log level management approach in the application\n2. Implement a mechanism to set the log level via:\n   - Environment variables (e.g., LOG_LEVEL=debug)\n3. Testing approach: Verify debug logs are properly filtered based on current level setting.",
+					"status": "done",
+					"parentTaskId": 11
+				},
+				{
+					"id": 5,
+					"title": "Integrate and Document the Enhanced Logging System",
+					"description": "Integrate all logging improvements into the main application, update documentation, and create examples for developers to effectively use the new logging features.",
+					"dependencies": [1, 2, 3, 4],
+					"details": "1. Combine all logging enhancements into a cohesive logging module or configuration\n2. Update the application to use the new logging system throughout all components\n3. Create comprehensive documentation that includes:\n   - Examples of the new log format\n   - Instructions for enabling/disabling debug mode\n   - How to modify log levels at runtime\n   - Best practices for logging in the application\n4. Add a logging configuration section to the application's README or developer documentation\n5. Create example log outputs for different scenarios (normal operation, errors, debug mode)\n6. Add monitoring or alerting based on specific log patterns if appropriate\n7. Consider implementing log rotation policies if not already in place\n8. Testing approach: End-to-end testing of the logging system in various application states and verifying all requirements (field filtering, timestamp normalization, pretty-printing, and debug mode) work together correctly.",
+					"status": "done",
+					"parentTaskId": 11
+				}
+			]
+		},
+		{
+			"id": 12,
+			"title": "Restructure Source Code by Moving Content to API Directory",
+			"description": "Reorganize the project by moving the current source code from the root of the src directory into a new api subdirectory while maintaining functionality.",
+			"details": "This task involves restructuring the project's source code organization to improve maintainability and follow better architectural practices. Steps include:\n\n1. Create a new 'api' directory inside the existing 'src' directory\n2. Move all relevant files and folders from the src directory root into the new api directory\n3. Update all import/export paths throughout the codebase to reflect the new structure\n4. Ensure that any build configurations (webpack, babel, etc.) are updated to recognize the new directory structure\n5. Update any path references in package.json scripts\n6. If using TypeScript, update any path aliases in tsconfig.json\n7. Ensure that the entry point of the application correctly points to the new location\n8. Document the new directory structure in the project README or documentation\n\nThis restructuring should not change any functionality of the code, only its organization. Be careful to maintain the relative relationships between files when moving them.",
+			"testStrategy": "To verify this task has been correctly implemented:\n\n1. Run the application locally to ensure it starts without errors\n2. Execute the existing test suite to confirm all tests pass with the new structure\n3. Verify API endpoints are still accessible by testing key endpoints manually or with automated tests\n4. Check build processes to ensure they complete successfully\n5. Verify that imports/exports work correctly by checking for any runtime errors related to module resolution\n6. If using a linter, run it to ensure there are no path-related warnings or errors\n7. Perform a code review to ensure all files were appropriately moved and no unnecessary files remain in the root src directory\n8. Create before/after directory structure diagrams and compare them to ensure the restructuring matches the expected outcome\n9. Deploy to a test environment to verify the application works in a production-like setting",
+			"status": "done",
+			"dependencies": [],
+			"priority": "medium"
+		},
+		{
+			"id": 13,
+			"title": "Fix Development Server Configuration to Run with Nodemon",
+			"description": "Resolve issues with the development server that is currently not running correctly with Nodemon, ensuring automatic server restarts when code changes are detected.",
+			"details": "The development server is not properly functioning with Nodemon, which is preventing automatic restarts during development. To fix this:\n\n1. Check the current Nodemon configuration in package.json scripts or nodemon.json if it exists\n2. Verify Nodemon is correctly installed as a dev dependency (npm list nodemon or check package.json)\n3. Examine any error logs related to Nodemon failures\n4. Update the dev script in package.json to properly invoke Nodemon with the correct entry point (e.g., \"dev\": \"nodemon src/api/index.js\")\n5. Configure Nodemon to watch the appropriate directories (especially considering the recent restructuring to the api subdirectory)\n6. Add a nodemon.json configuration file if needed with settings like:\n   - watch: directories to monitor for changes\n   - ext: file extensions to watch\n   - ignore: patterns to ignore\n   - exec: command to execute\n7. Ensure environment variables are properly passed to the Nodemon process\n8. Test that the server correctly restarts when making changes to monitored files",
+			"testStrategy": "1. Run the development server using the updated configuration (npm run dev or equivalent command)\n2. Verify the server starts without errors and Nodemon is actively monitoring for changes\n3. Make a minor change to a server file (e.g., add a console.log statement)\n4. Confirm Nodemon detects the change and automatically restarts the server\n5. Check server logs to ensure the restart was clean without errors\n6. Test changes in different types of files (routes, controllers, models) to verify all relevant files trigger restarts\n7. Verify that changes to ignored files (if configured) do not trigger restarts\n8. Test the server functionality after multiple automatic restarts to ensure stability\n9. Document the working Nodemon configuration for the team",
+			"status": "done",
+			"dependencies": [],
+			"priority": "high"
+		},
+		{
+			"id": 14,
+			"title": "Refactor ID Generation Logic Using a Standardized Library",
+			"description": "Replace the current poorly implemented ID handler logic across services with a robust solution, leveraging an appropriate external library if necessary.",
+			"details": "The current ID generation mechanism has several issues and inconsistencies across services. This task involves:\n\n1. Audit all services to identify where and how IDs are currently generated\n2. Research and select an appropriate library for ID generation (recommendations: uuid, nanoid, or cuid2)\n3. Create a centralized ID generation utility that:\n   - Provides consistent, collision-resistant unique identifiers\n   - Supports different ID formats if needed (UUID v4, sequential IDs, etc.)\n   - Has proper error handling\n   - Is well-documented for future developers\n4. Update all services to use the new ID generation utility\n5. Ensure backward compatibility with existing IDs in the system\n6. Add appropriate type definitions if using TypeScript\n\nConsiderations:\n- Performance impact of the chosen library\n- Security aspects (predictability, randomness)\n- Format of IDs (length, character set, etc.)\n- Distributed system considerations if applicable\n\nRecommended libraries:\n- uuid: Standard, widely used for UUID generation\n- nanoid: Compact, URL-friendly unique string ID generator\n- cuid2: Collision-resistant IDs designed for horizontal scaling",
+			"testStrategy": "Testing should verify both the functionality and reliability of the new ID generation system:\n\n1. Unit tests:\n   - Test the new ID utility functions for proper format and validation\n   - Verify error handling for edge cases\n   - Test for uniqueness by generating multiple IDs and checking for collisions\n\n2. Integration tests:\n   - Verify each service correctly uses the new ID generation utility\n   - Test that existing records with old ID formats are still accessible\n   - Ensure IDs are properly stored and retrieved from the database\n\n3. Performance tests:\n   - Benchmark the new ID generation against the old system\n   - Test ID generation under load (many concurrent requests)\n\n4. Validation criteria:\n   - IDs must be unique across multiple generations\n   - ID format must be consistent and meet system requirements\n   - All services must use the centralized utility rather than custom implementations\n   - No regressions in functionality related to IDs\n\nCreate a test script that generates thousands of IDs and verifies no collisions occur to demonstrate reliability.",
+			"status": "done",
+			"dependencies": [],
+			"priority": "medium"
+		},
+		{
+			"id": 15,
+			"title": "Evaluate Promptify Library for Message Parsing Capabilities",
+			"description": "Explore the Promptify library and assess its suitability for handling our message parsing requirements through a comprehensive Jupyter notebook analysis.",
+			"details": "Create a Jupyter notebook that thoroughly evaluates the Promptify library's capabilities for our message parsing needs. The notebook should:\n\n1. Install the Promptify library and document its core features and API\n2. Test basic functionality with sample messages from our current system\n3. Demonstrate how Promptify handles different message formats (JSON, XML, plain text, etc.)\n4. Explore its parsing capabilities including:\n   - Entity extraction\n   - Intent recognition\n   - Structured data extraction\n   - Error handling and edge cases\n5. Compare performance with our current message parsing solution\n6. Evaluate integration complexity with our existing codebase\n7. Document any limitations or potential issues\n8. Provide a section on scaling considerations\n\nThe notebook should be well-commented and include markdown explanations for each section to serve as documentation for the team. Include practical examples that reflect our specific use cases and message structures.",
+			"testStrategy": "The evaluation should be verified through the following approach:\n\n1. Execute all notebook cells to ensure they run without errors\n2. Verify that each core capability of Promptify is tested with relevant examples\n3. Create a quantitative comparison section that measures:\n   - Parsing accuracy on a sample of 20+ representative messages\n   - Processing time compared to current solution\n   - Memory usage\n   - Handling of malformed input\n4. Include a confusion matrix or similar evaluation metric for parsing accuracy\n5. Test with edge cases including:\n   - Empty messages\n   - Extremely large messages\n   - Malformed syntax\n   - Special characters and encoding issues\n6. Have another team member review the notebook and validate findings\n7. Summarize results in a final section with a clear recommendation on whether to adopt Promptify for our message parsing needs\n\nThe notebook should conclude with a decision matrix scoring Promptify against our requirements and current solution.",
+			"status": "done",
+			"dependencies": [],
+			"priority": "medium"
+		},
+		{
+			"id": 16,
+			"title": "Add Social Login with Google",
+			"description": "Implement Google OAuth 2.0 social login so users can authenticate using their Google accounts.",
+			"status": "pending",
+			"dependencies": [2],
+			"priority": "medium",
+			"details": "Integrate Google OAuth 2.0 with the existing authentication system to allow social login. Steps:\n1. Create OAuth credentials in Google Cloud Console (Client ID and Client Secret) and configure authorized redirect URIs.\n2. Add environment variables `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`, and `GOOGLE_OAUTH_CALLBACK_URL` to `.env.example` and parse them in `src/config/env-schema.ts`.\n3. Install and configure a Fastify OAuth2 plugin (e.g., `@fastify/oauth2`) to handle the Google authorization flow.\n4. Implement `/api/auth/google` endpoint to redirect users to Google for authentication.\n5. Implement `/api/auth/google/callback` endpoint to handle Google's response, obtain user profile information, and issue a JWT.\n6. Update `UserService` to create a new user from the Google profile if one does not already exist.\n7. Document setup instructions and route usage in `README.md`.\n8. Add unit and integration tests mocking Google OAuth endpoints to verify token issuance and user creation.",
+			"testStrategy": "Unit test the OAuth plugin configuration and callback logic. Integrate tests simulating the OAuth flow with mocked Google endpoints to verify JWT issuance and user creation. Validate error handling for invalid codes and missing environment variables."
+		}
+	],
+	"metadata": {
+		"projectName": "Credit Transactions Application",
+		"totalTasks": 16,
+		"sourceFile": "scripts/prd.txt",
+		"generatedAt": "2025-04-17"
+	}
+}

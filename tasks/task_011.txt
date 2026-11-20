@@ -1,0 +1,80 @@
+# Task ID: 11
+# Title: Improve server logs
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Remove unnecessary fields like level, pid, remoteAddress, remotePort. Normalize time field from unix to a human readable date. Pretify the JSON format because it is currently hard to read, it is too piled up. Create debug mode to enable or disable debug logs.
+# Details:
+
+
+# Test Strategy:
+
+
+# Subtasks:
+## 1. Implement Log Format Configuration and Field Filtering [done]
+### Dependencies: None
+### Description: Create a configurable logging system that removes unnecessary fields (level, pid, remoteAddress, remotePort) from log output while maintaining essential information.
+### Details:
+1. Identify the current logging implementation and determine if a library like Winston (Node.js), structlog (Python), or Logback (Java) is in use.
+2. Create a custom formatter that filters out specified fields:
+   - Create a whitelist or blacklist approach for field filtering
+   - Ensure the filtering is configurable via environment variables or config files
+   - Preserve essential fields like message content and error details
+3. Add unit tests to verify field filtering works correctly
+4. Document the new logging format and configuration options
+5. Testing approach: Create test cases with mock log entries containing all fields and verify unnecessary fields are removed while essential data is preserved.
+
+## 2. Normalize Timestamp Format to Human-Readable ISO 8601 [done]
+### Dependencies: 11.1
+### Description: Convert Unix timestamp values to ISO 8601 format (YYYY-MM-DDTHH:MM:SS.sssZ) for improved human readability while maintaining sortability and timezone information.
+### Details:
+1. Extend the custom formatter from subtask 1 to handle timestamp normalization
+2. Identify the current timestamp field (likely 'time') in the log structure
+3. Implement conversion logic from Unix timestamp to ISO 8601:
+   - For Node.js: `new Date(unixTimestamp * 1000).toISOString()`
+   - For Python: `datetime.datetime.fromtimestamp(timestamp).isoformat()`
+   - For Java: `Instant.ofEpochSecond(timestamp).toString()`
+4. Add fallback logic to use current time if timestamp is missing
+5. Ensure timezone information is preserved (preferably UTC/Z)
+6. Add unit tests to verify timestamp conversion works correctly with various inputs
+7. Testing approach: Create test cases with different Unix timestamps and verify correct ISO 8601 conversion.
+
+## 3. Implement Pretty-Printing for JSON Log Format [done]
+### Dependencies: 11.1, 11.2
+### Description: Enhance log readability by implementing pretty-printing for JSON logs with proper indentation and formatting, making them easier to read during development and debugging.
+### Details:
+1. Extend the logging formatter to include pretty-printing capabilities for JSON output
+2. Implement configurable indentation (recommend 2 spaces for balance of readability and compactness)
+3. For Node.js, use `JSON.stringify(logObject, null, 2)` or Winston's built-in pretty-print formatter
+4. For Python, use `json.dumps(log_dict, indent=2)` or structlog's pretty-printing processor
+5. For Java, use Jackson's `ObjectMapper` with `SerializationFeature.INDENT_OUTPUT`
+6. Ensure the pretty-printing doesn't break existing log parsing systems
+7. Consider performance implications and potentially make pretty-printing optional in production
+8. Testing approach: Generate sample logs and verify the JSON structure is properly indented and formatted for readability.
+
+## 4. Create Debug Mode Toggle for Log Levels [done]
+### Dependencies: 11.1, 11.2, 11.3
+### Description: Implement a configurable debug mode that can enable or disable debug-level logs, allowing for dynamic log verbosity control.
+### Details:
+1. Identify the current log level management approach in the application
+2. Implement a mechanism to set the log level via:
+   - Environment variables (e.g., LOG_LEVEL=debug)
+3. Testing approach: Verify debug logs are properly filtered based on current level setting.
+
+## 5. Integrate and Document the Enhanced Logging System [done]
+### Dependencies: 11.1, 11.2, 11.3, 11.4
+### Description: Integrate all logging improvements into the main application, update documentation, and create examples for developers to effectively use the new logging features.
+### Details:
+1. Combine all logging enhancements into a cohesive logging module or configuration
+2. Update the application to use the new logging system throughout all components
+3. Create comprehensive documentation that includes:
+   - Examples of the new log format
+   - Instructions for enabling/disabling debug mode
+   - How to modify log levels at runtime
+   - Best practices for logging in the application
+4. Add a logging configuration section to the application's README or developer documentation
+5. Create example log outputs for different scenarios (normal operation, errors, debug mode)
+6. Add monitoring or alerting based on specific log patterns if appropriate
+7. Consider implementing log rotation policies if not already in place
+8. Testing approach: End-to-end testing of the logging system in various application states and verifying all requirements (field filtering, timestamp normalization, pretty-printing, and debug mode) work together correctly.
+

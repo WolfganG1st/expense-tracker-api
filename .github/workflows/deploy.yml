@@ -1,0 +1,44 @@
+name: Deploy to Production Server via Self-Hosted Runner
+
+on:
+  push:
+    branches:
+      - prod
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, docker-host]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: |
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
+          echo "X_TZ=${{ secrets.X_TZ }}" >> .env
+          echo "GOOGLE_OAUTH_CALLBACK_URL=${{ secrets.GOOGLE_OAUTH_CALLBACK_URL }}" >> .env
+          echo "GOOGLE_OAUTH_CLIENT_ID=${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}" >> .env
+          echo "GOOGLE_OAUTH_CLIENT_SECRET=${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}" >> .env
+          echo "HOST=${{ secrets.HOST }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
+          echo "OPEN_ROUTER_API_KEY=${{ secrets.OPEN_ROUTER_API_KEY }}" >> .env
+          echo "PORT=${{ secrets.PORT }}" >> .env
+          echo "TRUST_PROXY=${{ secrets.TRUST_PROXY }}" >> .env
+          echo "ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}" >> .env
+          echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> .env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+          echo '${{ secrets.DOCKER_ENV }}' > docker.env
+
+      - name: Build and Deploy Docker Container
+        run: |
+          echo "Starting docker compose..."
+          docker compose up prod --build -d --remove-orphans
+          echo "Cleaning up old images..."
+          docker image prune -f
+          echo "Deploy complete!"
+

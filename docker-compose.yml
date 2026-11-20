@@ -1,0 +1,63 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: db
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: dev
+    ports:
+      - "8123:8123"
+      - "3100:3100"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env
+      - docker.env
+    environment:
+      - NODE_ENV=development
+      - HOST=0.0.0.0
+      - NODE_OPTIONS=--trace-warnings
+      - TZ=${X_TZ}
+    command: ["sh", "-c", "pnpm prisma:docker:migrate && pnpm seed:docker && pnpm dev:docker"]
+    restart: unless-stopped
+    depends_on:
+      - db
+
+  prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: prod
+    ports:
+      - "8123:8123"
+      - "3100:3100"
+    env_file:
+      - .env
+      - docker.env
+    environment:
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - TZ=${X_TZ}
+    restart: unless-stopped
+    depends_on:
+      - db
+
+volumes:
+  pgdata:

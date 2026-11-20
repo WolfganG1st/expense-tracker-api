@@ -1,0 +1,32 @@
+# Task ID: 13
+# Title: Fix Development Server Configuration to Run with Nodemon
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Resolve issues with the development server that is currently not running correctly with Nodemon, ensuring automatic server restarts when code changes are detected.
+# Details:
+The development server is not properly functioning with Nodemon, which is preventing automatic restarts during development. To fix this:
+
+1. Check the current Nodemon configuration in package.json scripts or nodemon.json if it exists
+2. Verify Nodemon is correctly installed as a dev dependency (npm list nodemon or check package.json)
+3. Examine any error logs related to Nodemon failures
+4. Update the dev script in package.json to properly invoke Nodemon with the correct entry point (e.g., "dev": "nodemon src/api/index.js")
+5. Configure Nodemon to watch the appropriate directories (especially considering the recent restructuring to the api subdirectory)
+6. Add a nodemon.json configuration file if needed with settings like:
+   - watch: directories to monitor for changes
+   - ext: file extensions to watch
+   - ignore: patterns to ignore
+   - exec: command to execute
+7. Ensure environment variables are properly passed to the Nodemon process
+8. Test that the server correctly restarts when making changes to monitored files
+
+# Test Strategy:
+1. Run the development server using the updated configuration (npm run dev or equivalent command)
+2. Verify the server starts without errors and Nodemon is actively monitoring for changes
+3. Make a minor change to a server file (e.g., add a console.log statement)
+4. Confirm Nodemon detects the change and automatically restarts the server
+5. Check server logs to ensure the restart was clean without errors
+6. Test changes in different types of files (routes, controllers, models) to verify all relevant files trigger restarts
+7. Verify that changes to ignored files (if configured) do not trigger restarts
+8. Test the server functionality after multiple automatic restarts to ensure stability
+9. Document the working Nodemon configuration for the team

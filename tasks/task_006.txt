@@ -1,0 +1,80 @@
+# Task ID: 6
+# Title: Develop LLM Integration for Transaction Parsing
+# Status: done
+# Dependencies: 15
+# Priority: medium
+# Description: Integrate with a Language Learning Model (LLM) to parse messages and infer transaction categories
+# Details:
+Set up integration with an LLM API (like OpenAI). Create a message parsing service to extract transaction details from text. Implement category inference based on description and vendor. Add context management to improve parsing accuracy over time. Create a feedback mechanism to mark correctly parsed entries. Implement error handling for LLM API failures. Add logging for parsing attempts and results.
+
+# Test Strategy:
+Test parsing with various message formats. Verify category inference with different transaction types. Create a test suite with sample messages. Measure parsing accuracy. Test the feedback mechanism for correctly parsed entries.
+
+# Subtasks:
+## 1. Set up LLM API Integration and Configuration Management [done]
+### Dependencies: None
+### Description: Establish a connection with an LLM provider (OpenAI recommended) and create a configuration system to manage API keys, model selection, and request parameters.
+### Details:
+Implementation steps:
+1. Create an LLMService class that handles API connections with proper error handling and retries
+2. Implement configuration management for API keys using environment variables
+3. Set up model selection logic (use smaller models like GPT-3.5-turbo for simple parsing, GPT-4 for complex cases)
+4. Configure request parameters (temperature=0 for deterministic outputs, max_tokens limits)
+5. Implement basic error handling for API failures (retry logic, fallbacks)
+6. Add comprehensive logging for API calls and responses
+7. Testing approach: Create unit tests with mocked API responses and integration tests with actual API calls using test credentials
+
+## 2. Develop Message Parsing Service with Prompt Engineering [done]
+### Dependencies: 6.1
+### Description: Create a service that extracts transaction details from text messages using carefully engineered prompts that request structured outputs.
+### Details:
+Implementation steps:
+1. Design an TransactionParsingService class that uses the LLMService
+2. Create optimized prompts that explicitly request JSON-formatted responses containing transaction amount, date, vendor, and description
+3. Implement prompt templates with placeholders for dynamic content
+4. Use Pydantic models to validate and parse LLM responses (TransactionDetails class)
+5. Add fallback mechanisms for handling malformed LLM outputs
+6. Implement a semantic caching layer using sentence embeddings to reduce duplicate API calls for similar messages
+7. Testing approach: Test with a variety of message formats (receipts, informal descriptions, incomplete information) and verify correct extraction of transaction details
+
+## 3. Implement Category Inference Engine [done]
+### Dependencies: 6.2
+### Description: Create a system that uses the LLM to infer transaction categories based on the extracted transaction details, with support for custom categories.
+### Details:
+Implementation steps:
+1. Define a standard set of transaction categories with descriptions
+2. Create a CategoryInferenceService that uses the LLM to classify transactions
+3. Design prompts that include category definitions and examples for better inference
+4. Implement a confidence score system to identify uncertain classifications
+5. Create a mechanism to handle custom organization-specific categories
+6. Use Retrieval-Augmented Generation (RAG) to incorporate previous similar transactions as context
+7. Add exact-match caching for category inference to improve performance
+8. Testing approach: Create a test suite with diverse transaction scenarios covering all categories, including edge cases
+
+## 4. Develop Context Management System [done]
+### Dependencies: 6.2, 6.3
+### Description: Create a system that maintains and provides relevant context to the LLM to improve parsing accuracy over time, using historical data and user preferences.
+### Details:
+Implementation steps:
+1. Design a ContextManager class that stores and retrieves relevant context
+2. Implement vector embeddings for semantic similarity search of previous transactions
+3. Create a mechanism to include user-specific patterns and preferences in the context
+4. Develop a context selection algorithm that chooses the most relevant context within token limits
+5. Implement a database schema for storing historical parsing results and feedback
+6. Create an API to query and update the context database
+7. Testing approach: Measure improvement in parsing accuracy when context is provided versus when it's not available
+
+## 5. Implement User Feedback and Continuous Improvement System [done]
+### Dependencies: 6.2, 6.3, 6.4
+### Description: Create a mechanism for users to provide feedback on parsing results and use this feedback to improve the system over time.
+### Details:
+Implementation steps:
+1. Create a FeedbackService to collect and store user corrections
+2. Implement an API endpoint for submitting feedback on parsed transactions
+3. Design a UI component for marking correctly parsed entries and suggesting corrections
+4. Develop a system to incorporate feedback into future parsing attempts (adjust prompts, add examples)
+5. Create an analytics dashboard to track parsing accuracy over time
+6. Implement a periodic evaluation system to identify common parsing errors
+7. Add A/B testing capability to compare different prompt strategies
+8. Testing approach: Simulate user feedback scenarios and verify that the system improves accuracy for similar future inputs
+

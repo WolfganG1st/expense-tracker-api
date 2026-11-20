@@ -1,0 +1,22 @@
+# Task ID: 16
+# Title: Add Social Login with Google
+# Status: pending
+# Dependencies: 2
+# Priority: medium
+# Description: Implement Google OAuth 2.0 social login so users can authenticate using their Google accounts.
+# Details:
+Integrate Google OAuth 2.0 with the existing authentication system to allow social login.
+Steps:
+1. Create OAuth credentials in Google Cloud Console (Client ID and Client Secret) and configure authorized redirect URIs.
+2. Add environment variables `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`, and `GOOGLE_OAUTH_CALLBACK_URL` to `.env.example` and parse them in `src/config/env-schema.ts`.
+3. Install and configure a Fastify OAuth2 plugin (e.g., `@fastify/oauth2`) to handle the Google authorization flow.
+4. Implement `/api/auth/google` endpoint to redirect users to Google for authentication.
+5. Implement `/api/auth/google/callback` endpoint to handle Google's response, obtain user profile information, and issue a JWT.
+6. Update `UserService` to create a new user from the Google profile if one does not already exist.
+7. Document setup instructions and route usage in `README.md`.
+8. Add unit and integration tests mocking Google OAuth endpoints to verify token issuance and user creation.
+
+# Test Strategy:
+- Unit tests for the OAuth plugin configuration and callback handler logic.
+- Integration tests simulating the OAuth flow using mocked Google endpoints to ensure JWT tokens are returned and users are created or updated correctly.
+- Validate error handling for invalid authorization codes and missing environment variables.
